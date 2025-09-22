@@ -4,7 +4,7 @@ mod networking_util;
 
 use nix::sys::socket::*;
 use networking_util::{
-    create_socket, server_loop, sigint_init, CATCH_SIGINT, server_check_validpath
+    create_socket, server_loop, sigint_init, CATCH_SIGINT, server_check_validpath, server_arg_validation
 };
 
 use::std::{process, env};
@@ -20,12 +20,20 @@ fn main() {
     unsafe { match signal::sigaction(signal::SIGINT, &sig_action) {
         Ok(_sigaction) => {},
         Err(e) => {
-            eprintln!("Error setting up Signal Handler {}", e);
+            eprintln!("[SERVER] Error setting up Signal Handler {}", e);
             process::exit(1);
         }
     } };
 
+    // Get args and verify
     let user_args: Vec<String> = env::args().collect();
+    match server_arg_validation(user_args.clone()) {
+        Ok(())=> {},
+        Err(e) => {
+            eprintln!("{}", e);
+            process::exit(1);
+        }
+    }
 
     // Check if the path is valid
     match server_check_validpath(&user_args) {

@@ -5,7 +5,7 @@ use nix::sys::socket::*;
 
 
 use networking_util::{
-    arg_validation, create_socket, format_send, client_check_validpath
+    client_arg_validation, create_socket, format_send, client_check_validpath
 };
 use::std::{process, env};
 use std::os::fd::AsRawFd;
@@ -14,10 +14,10 @@ fn main() {
 
     // get user args
     let args: Vec<String> = env::args().collect();
-    match arg_validation(args.clone()) {
+    match client_arg_validation(args.clone()) {
         Ok(())=> {},
         Err(e) => {
-            eprintln!("[CLIENT] Error: {}", e);
+            eprintln!("{}", e);
             process::exit(1);
         }
     }

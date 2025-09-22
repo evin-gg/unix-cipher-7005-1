@@ -42,7 +42,7 @@ pub fn client_check_validpath(argpath: &Vec<String>) -> Result<(), String> {
     }
 }
 
-pub fn arg_validation(args: Vec<String>) -> Result<(), String> {
+pub fn client_arg_validation(args: Vec<String>) -> Result<(), String> {
     if args.len() != 4 || args[2].parse::<i32>().is_err() {
         return Err("[CLIENT] Usage: <message> <shift> <socketpath>".to_string());
     }
@@ -101,10 +101,6 @@ pub fn server_loop(sock: &OwnedFd) {
 
 pub fn server_check_validpath(argpath: &Vec<String>) -> Result<(), String> {
 
-    if argpath.len() != 2 {
-        return Err("[SERVER] Usage: <socketpath>".to_string());
-    }
-
     let path = Path::new(&argpath[1]);
     if path.exists() {
         Err("[SERVER] Old socket found, it will be unlinked and replaced".to_string())
@@ -113,3 +109,11 @@ pub fn server_check_validpath(argpath: &Vec<String>) -> Result<(), String> {
     }
 }
 
+pub fn server_arg_validation(args: Vec<String>) -> Result<(), String> {
+    if args.len() != 2 {
+        return Err("[SERVER] Usage: <socketpath>".to_string());
+    }
+    else {
+        Ok(()) 
+    }
+}
